@@ -1,4 +1,5 @@
-﻿using PaymentContext.Domain.ValueObjects;
+﻿using Flunt.Validations;
+using PaymentContext.Domain.ValueObjects;
 
 namespace PaymentContext.Domain.Entities;
 
@@ -11,6 +12,13 @@ public class CreditCardPayment
             CardHolderName = cardHolderName;
             CardNumber = cardNumber;
             LastTransactionNumber = lastTransactionNumber;
+            
+            AddNotifications(new Contract()
+                .Requires()
+                .IsNullOrEmpty(CardHolderName, "CreditCardPayment.CardHolderName", "Deve ser colocado o nome do cartão")
+                .IsGreaterThan(0, Total, "Payment.Total", "O total não pode ser zero")
+                .IsGreaterOrEqualsThan(Total, TotalPaid, "Payment.TotalPayd",
+                    "O valor pago é menor que o valor do pagamento"));
         }
 
         public string CardHolderName { get; private set; }

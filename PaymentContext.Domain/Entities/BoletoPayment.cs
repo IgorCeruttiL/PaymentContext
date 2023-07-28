@@ -1,4 +1,5 @@
-﻿using PaymentContext.Domain.ValueObjects;
+﻿using Flunt.Validations;
+using PaymentContext.Domain.ValueObjects;
 
 namespace PaymentContext.Domain.Entities;
 
@@ -8,6 +9,12 @@ public class BoletoPayment  : Payment
         {
             BarCode = barCode;
             BoletoNumber = boletoNumber;
+            
+            AddNotifications(new Contract()
+                .Requires()
+                .IsGreaterThan(0, Total, "Payment.Total", "O total não pode ser zero")
+                .IsGreaterOrEqualsThan(Total, TotalPaid, "Payment.TotalPayd",
+                    "O valor pago é menor que o valor do pagamento"));
         }
 
         public string BarCode { get; private set; }
