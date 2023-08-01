@@ -1,8 +1,11 @@
-﻿using PaymentContext.Domain.Enums;
+﻿using System.Windows.Input;
+using Flunt.Notifications;
+using Flunt.Validations;
+using PaymentContext.Domain.Enums;
 
 namespace PaymentContext.Domain.Commands;
 
-public class CreateCreditCardSubscriptionCommand
+public class CreateCreditCardSubscriptionCommand : Notifiable, ICommand
 {
     public string FirstName { get;  set; }
     public string LastName { get;  set; }
@@ -27,4 +30,25 @@ public class CreateCreditCardSubscriptionCommand
     public string State { get;  set; }
     public string Country { get;  set; }
     public string zipCode { get;  set; }
+
+    public void Validate()
+    {
+        AddNotifications(new Contract()
+            .Requires()
+            .IsGreaterThan(0, Total, "Payment.Total", "O total não pode ser zero")
+            .IsGreaterOrEqualsThan(Total, TotalPaid, "Payment.TotalPayd",
+                "O valor pago é menor que o valor do pagamento"));
+    }
+    
+    public bool CanExecute(object? parameter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Execute(object? parameter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public event EventHandler? CanExecuteChanged;
 }
