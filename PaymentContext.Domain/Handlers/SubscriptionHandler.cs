@@ -65,6 +65,10 @@ public class SubscriptionHandler : Notifiable, IHandler<CreateBoletoSubscription
         // Agrupar notificações
         AddNotifications(name, document, adress, student, subscription, payment);
         
+        // Checar as notificações
+        if (Invalid)
+            return new CommandResult(false, "Não foi possivel realizar sua assinatura");
+        
         // Salvar as informações
         _repository.CreateSubscription(student);
         
